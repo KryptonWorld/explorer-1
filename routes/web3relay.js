@@ -4,6 +4,7 @@
     Endpoint for client to talk to etc node
 */
 
+var Conf = require("../config").Conf
 var Web3 = require("web3");
 var web3;
 
@@ -18,7 +19,7 @@ var filterTrace = require('./filters').filterTrace;
 if (typeof web3 !== "undefined") {
   web3 = new Web3(web3.currentProvider);
 } else {
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider(Conf.Web3Provider));
 }
 
 if (web3.isConnected()) 
@@ -26,6 +27,7 @@ if (web3.isConnected())
 else
   throw "No connection";
 
+console.log(web3)
 
 var newBlocks = web3.eth.filter("latest");
 var newTxs = web3.eth.filter("pending");

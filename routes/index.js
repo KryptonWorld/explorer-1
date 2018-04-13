@@ -1,7 +1,12 @@
 var mongoose = require( 'mongoose' );
 
-var Block     = mongoose.model( 'Block' );
-var Transaction = mongoose.model( 'Transaction' );
+var DB = require("../db.js")
+
+var Block     = DB.Block
+var Transaction = DB.Transaction
+
+
+
 var filters = require('./filters')
 
 

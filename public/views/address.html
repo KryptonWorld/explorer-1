@@ -1,5 +1,11 @@
 <!-- BEGIN PAGE CONTENT-->
 <div class="row">
+
+  CCC1
+            <div class="tab-pane" id="tab_addr_3" ng-show="addr.isContract" ng-class="{active: activeTab == 'tab_addr_3'}">
+ BBB             <contract-source></contract-source>HHH
+            </div>
+            DDD
   <div class="col-md-12 portlet light">
       <div class="portlet-title">
         <div class="caption"><span ng-show="addr.isContract">Contract </span>Overview</div>
@@ -12,7 +18,7 @@
                   {{ addr.balance | number: 10 }} </span><br>
                 <span class="eth-stat-text">
                   ETC Balance <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="Note: Balance may not reflect transaction data if you have transactions resulting from Contract Internal Transactions. We are working on adding that functionality."></i>
-                  </span><br> 
+                  </span><br>
                   <div class="margin-top-20">
                   <span class="fade">{{ addr.ethfiat | number: 10 }}</span> <span class="eth-stat-text fade">ETH-F balance
                   </span> <a href="http://etherscan.io/address/{{addrHash}}" target="_blank"><i class="fa fa-external-link"></i></a>
@@ -33,7 +39,7 @@
                     <span class='btn blue-madison' ng-show="!isFollowing(addrHash)" ng-click="follow(addrHash)">WATCH <i class="fa fa-rss "></i></span>
                     <span class='btn grey'  ng-show="isFollowing(addrHash)" ng-click="unFollow(addrHash)">WATCHING <i class="fa fa-check "></i></span>
                     <div class="margin-top-20">
-                        {{ addr.follow_count }}0 
+                        {{ addr.follow_count }}0
                         <span class="eth-stat-text">WATCHING</span>
                     </div>
                 </div>
@@ -108,7 +114,7 @@
             </div>
           </div>
         </div>
-      
+
       </div>
     </div><!-- End: portlet -->
 </div>

@@ -3,10 +3,11 @@
 ***/
 
 require( '../db-internal.js' );
+var conf = require( '../config.js' ).Conf;
 
 var http = require('http');
 var Web3 = require('web3');
-var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+var web3 = new Web3(new Web3.providers.HttpProvider(conf.HttpProvider));
 
 var mongoose = require( 'mongoose' );
 var InternalTx     = mongoose.model( 'InternalTransaction' );
@@ -129,8 +130,8 @@ var getLatestBlocks = function(latest, start) {
 }
 
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/blockDB');
-mongoose.set('debug', true);
+mongoose.connect(process.env.MONGO_URI || conf.MongoUrl )
+mongoose.set('debug', conf.EnableMongooseDebug);
 
 var minutes = 5;
 statInterval = minutes * 60 * 1000;

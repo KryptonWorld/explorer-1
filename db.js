@@ -1,5 +1,6 @@
 var mongoose = require( 'mongoose' );
 var Schema   = mongoose.Schema;
+var Conf = require("./config").Conf
 
 var Block = new Schema(
 {
@@ -41,22 +42,23 @@ var Transaction = new Schema(
     "nonce": Number,
     "blockHash": String,
     "blockNumber": Number,
-    "transactionIndex": Number,
+    "transIndex": {type:Number ,alias :"transactionIndex"},
     "from": String,
     "to": String,
     "value": String,
     "gas": Number,
     "gasPrice": String,
-    "timestamp": Number,
+    "createdAt":{type: Number ,alias : "timestamp"},
     "input": String
 });
 
-mongoose.model('Block', Block);
-mongoose.model('Contract', Contract);
-mongoose.model('Transaction', Transaction);
-module.exports.Block = mongoose.model('Block');
-module.exports.Contract = mongoose.model('Contract');
-module.exports.Transaction = mongoose.model('Transaction');
+mongoose.model('eth_blocks', Block);
+mongoose.model('eth_contracts', Contract);
+mongoose.model('eth_transaction', Transaction);
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/blockDB');
+module.exports.Block = mongoose.model('eth_blocks');
+module.exports.Contract = mongoose.model('eth_contracts');
+module.exports.Transaction = mongoose.model('eth_transaction');
+
+mongoose.connect(process.env.MONGO_URI || Conf.MongoUrl);
 mongoose.set('debug', true);

@@ -2,9 +2,10 @@
   Stuff to deal with verified contracts in DB 
 */
 
-require( '../db.js' );
+var DB = require( '../db.js' );
 var mongoose = require( 'mongoose' );
-var Contract     = mongoose.model( 'Contract' );
+
+var Contract     =  DB.Contract
 
 exports.addContract = function(contract) {
   Contract.update(

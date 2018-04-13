@@ -7,8 +7,8 @@ var fs = require('fs');
 var Web3 = require('web3');
 
 var mongoose = require( 'mongoose' );
-var Block     = mongoose.model( 'Block' );
-var Transaction     = mongoose.model( 'Transaction' );
+var Block     = DB.Block
+var Transaction = DB.Transaction
 
 var grabBlocks = function(config) {
     var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:' + 

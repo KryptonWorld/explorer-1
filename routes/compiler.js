@@ -1,4 +1,5 @@
 var solc = require('solc');
+//var solc = require('../solc/versions/solc-js/');
 
 // var eth = require('./web3dummy').eth;
 var eth = require('./web3relay').eth;
@@ -53,6 +54,10 @@ var compileSolc = function(req, res) {
         testValidCode(output, data, bytecode, res);
     } else {
 
+       var output = solc.compile(input, optimise); 
+       testValidCode(output, data, bytecode, res);
+
+      /*
       solc.loadRemoteVersion(version, function(err, solcV) {  
         if (err) {
           console.error(err);
@@ -64,6 +69,9 @@ var compileSolc = function(req, res) {
           testValidCode(output, data, bytecode, res);
         }
       });
+      */
+
+
     }
     return;
   } catch (e) {
