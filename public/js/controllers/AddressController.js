@@ -1,3 +1,4 @@
+
 angular.module('BlocksApp').controller('AddressController', function($stateParams, $rootScope, $scope, $http, $location) {
     $scope.$on('$viewContentLoaded', function() {   
         // initialize core components
@@ -85,10 +86,10 @@ angular.module('BlocksApp').controller('AddressController', function($stateParam
     var fetchInternalTxs = function() {
       $http({
         method: 'POST',
-        url: '/web3relay',
-        data: {"addr_trace": $scope.addrHash}
+        url: '/internal_trans',
+        data: {"addrHash": $scope.addrHash}
       }).success(function(data) {
-        $scope.internal_transactions = data;
+        $scope.internal_transactions = data.res;
       });      
     }
     

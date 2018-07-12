@@ -1,11 +1,6 @@
 <!-- BEGIN PAGE CONTENT-->
 <div class="row">
 
-  CCC1
-            <div class="tab-pane" id="tab_addr_3" ng-show="addr.isContract" ng-class="{active: activeTab == 'tab_addr_3'}">
- BBB             <contract-source></contract-source>HHH
-            </div>
-            DDD
   <div class="col-md-12 portlet light">
       <div class="portlet-title">
         <div class="caption"><span ng-show="addr.isContract">Contract </span>Overview</div>
@@ -17,10 +12,10 @@
                 <span class="eth-stat-title">
                   {{ addr.balance | number: 10 }} </span><br>
                 <span class="eth-stat-text">
-                  ETC Balance <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="Note: Balance may not reflect transaction data if you have transactions resulting from Contract Internal Transactions. We are working on adding that functionality."></i>
+                  Keth Balance <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="Note: Balance may not reflect transaction data if you have transactions resulting from Contract Internal Transactions. We are working on adding that functionality."></i>
                   </span><br>
                   <div class="margin-top-20">
-                  <span class="fade">{{ addr.ethfiat | number: 10 }}</span> <span class="eth-stat-text fade">ETH-F balance
+                  <span class="fade">{{ addr.ethfiat | number: 10 }}</span> <span class="eth-stat-text fade">KETH-F balance
                   </span> <a href="http://etherscan.io/address/{{addrHash}}" target="_blank"><i class="fa fa-external-link"></i></a>
                   </div>
                   <div class="margin-top-20">
@@ -75,7 +70,7 @@
                           <th width="8%"> Block </th>
                           <th width="15%"> From </th>
                           <th width="15%"> To </th>
-                          <th width="10%"> ETC </th>
+                          <th width="10%"> Keth </th>
                           <th width="0%"> gas </th>
                           <th width="12%"> Age </th>
                       </tr>
@@ -87,24 +82,24 @@
               <table class="table table-condensed" ng-show="addr.isContract">
                 <thead>
                     <tr>
-                        <th width="15%"> TxHash </th>
-                        <th width="8%"> Block </th>
-                        <th width="15%"> From </th>
-                        <th width="15%"> To </th>
-                        <th width="10%"> ETC </th>
-                        <th width="0%"> gas </th>
+                        <th width="40%"> TxHash </th>
+                        <th width="25%"> From </th>
+                        <th width="25%"> To </th>
+                        <th width="10%"> Keth </th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="t in internal_transactions track by $index">
-                        <td class="truncate-txhash"> <a href="/tx/{{t.transactionHash}}">{{t.transactionHash}}</a> </td>
-                        <td style="text-align:right"><a href="/block/{{t.blockNumber}}">{{t.blockNumber}}</a>
+                        <td class="truncate-txhash"> <a href="/tx/{{t.transactionHash}}">{{t.transHash}}</a> </td>
+                        <!--<td style="text-align:right"><a href="/block/{{t.blockNumber}}">{{t.blockNumber}}</a> -->
                         <td class="truncate-addrhash"> <a href="/addr/{{t.from}}">{{t.from}}</a> </td>
                         <td class="truncate-addrhash"> <a href="/addr/{{t.to}}">{{t.to}}</a> </td>
-                        <td style="text-align:right"> {{t.value}} </td>
-                        <td style="text-align:right"> {{t.gas}} </td>
-                        <td style="text-align:center"><span class="label label-sm label-info {{t.type}}"> {{t.type}}</span><span class="label label-sm label-danger" ng-show="t.error"> {{t.error}}</span></td>
+                        <td style="text-align:left"> {{t.value}} </td>
+                        <!--                    <td style="text-align:right"> {{t.gas}} </td> -->
+                        <!--
+                          <td style="text-align:center"><span class="label label-sm label-info {{t.type}}"> {{t.type}}</span><span class="label label-sm label-danger" ng-show="t.error"> {{t.error}}</span></td>
+                        -->
                     </tr>
                 </tbody>
               </table>

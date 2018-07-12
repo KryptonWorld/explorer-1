@@ -14,7 +14,10 @@ var etherUnits = require(__lib + "etherUnits.js")
 var getLatestBlocks = require('./index').getLatestBlocks;
 var filterBlocks = require('./filters').filterBlocks;
 var filterTrace = require('./filters').filterTrace;
+var DB = require("../db.js")
+var Transaction = DB.Transaction
 
+var async = require("async")
 
 if (typeof web3 !== "undefined") {
   web3 = new Web3(web3.currentProvider);
@@ -104,38 +107,56 @@ exports.data = function(req, res){
 
     var addrData = {};
 
-    if (options.indexOf("balance") > -1) {
-      try {
-        addrData["balance"] = web3.eth.getBalance(addr);  
-        addrData["balance"] = etherUnits.toEther(addrData["balance"], 'wei');
-      } catch(err) {
-        console.error("AddrWeb3 error :" + err);
-        addrData = {"error": true};
+    async.parallel([
+
+      (finish) =>{
+        if (options.indexOf("balance") > -1) {
+          web3.eth.getBalance(addr,(err,balance)=>{
+            if(!err){
+              addrData["balance"] =  balance
+              addrData["balance"] = etherUnits.toEther(addrData["balance"], 'wei');
+            }else{
+              console.error("AddrWeb3 error :" + err);
+               addrData = {"error": true};
+            }
+            finish()
+          });  
+        }
+      },
+      (finish) =>{
+        if (options.indexOf("count") > -1) {
+          var addrFind = Transaction.find( { $or: [{"to": addr}, {"from": addr}] })  
+          addrFind.count(function (err, cnt) {
+            if(!err){
+              addrData["count"] = cnt
+            }else{
+              addrData = {"error": true};
+            }
+            finish()
+          })
+        }
+      },
+      (finish) =>{
+        if (options.indexOf("bytecode") > -1) {
+          try {
+             addrData["bytecode"] = web3.eth.getCode(addr);
+             if (addrData["bytecode"].length > 2) 
+                addrData["isContract"] = true;
+             else
+                addrData["isContract"] = false;
+          } catch (err) {
+            console.error("AddrWeb3 error :" + err);
+            addrData = {"error": true};
+          }
+          finish()
+        }
       }
-    }
-    if (options.indexOf("count") > -1) {
-      try {
-         addrData["count"] = web3.eth.getTransactionCount(addr);
-      } catch (err) {
-        console.error("AddrWeb3 error :" + err);
-        addrData = {"error": true};
-      }
-    }
-    if (options.indexOf("bytecode") > -1) {
-      try {
-         addrData["bytecode"] = web3.eth.getCode(addr);
-         if (addrData["bytecode"].length > 2) 
-            addrData["isContract"] = true;
-         else
-            addrData["isContract"] = false;
-      } catch (err) {
-        console.error("AddrWeb3 error :" + err);
-        addrData = {"error": true};
-      }
-    }
+
+    ],(err,reslut)=> {
+      res.write(JSON.stringify(addrData));
+      res.end();
+    })
    
-    res.write(JSON.stringify(addrData));
-    res.end();
 
 
   } else if ("block" in req.body) {

@@ -83,6 +83,7 @@
     width: 255px;
     height: 75px;
     position: absolute;
+    padding-top:10px;
 }
 
 .page-header .page-header-top .top-menu {

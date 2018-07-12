@@ -4,6 +4,7 @@ var DB = require("../db.js")
 
 var Block     = DB.Block
 var Transaction = DB.Transaction
+var InternalTransaction = require("../db-internal.js").InternalTransaction
 
 
 
@@ -41,6 +42,7 @@ module.exports = function(app){
   app.post('/fiat', fiat);
   app.post('/stats', stats);
   
+  app.post('/internal_trans',getInternalTrans);
 
 }
 
@@ -176,7 +178,13 @@ var sendTxs = function(lim, res) {
           res.end();
         });
 }
+var getInternalTrans = function(req, res) {
+  InternalTransaction.find({"contractAddr" : req.body.addrHash},(err,data)=>{
+   res.write(JSON.stringify({"res": data}));
+   res.end();
+  })
 
+}
 const MAX_ENTRIES = 10;
 
 const DATA_ACTIONS = {
