@@ -52,13 +52,39 @@ var Transaction = new Schema(
     "input": String
 });
 
+
+var TokenBalance = new Schema({
+  "addr" :String,
+  "tokenType" : String,
+  "value" :Number,
+})
+
+
+var TokenTransaction = new Schema({
+    "transHash": String,
+    "contractType":String,
+    "blockNumber": Number,
+    "transIndex": Number,
+    "from": String,
+    "to": String,
+    "value": String,
+    "gasPrice": String,
+    "createdAt":Number,
+})
+
+
+
 mongoose.model('eth_blocks', Block);
 mongoose.model('eth_contracts', Contract);
 mongoose.model('eth_transaction', Transaction);
+mongoose.model('token_balances', TokenBalance);
+mongoose.model('token_transactions', TokenTransaction);
 
 module.exports.Block = mongoose.model('eth_blocks');
 module.exports.Contract = mongoose.model('eth_contracts');
 module.exports.Transaction = mongoose.model('eth_transaction');
+module.exports.TokenBalance = mongoose.model('token_balances');
+module.exports.TokenTransaction = mongoose.model('token_transactions');
 
 mongoose.connect(process.env.MONGO_URI || Conf.MongoUrl);
 mongoose.set('debug', true);

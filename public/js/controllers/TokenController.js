@@ -70,3 +70,29 @@ angular.module('BlocksApp').controller('TokenController', function($stateParams,
       }
   }
 })
+.directive('transferTokens', function($http) {
+  return {
+    restrict: 'E',
+    templateUrl: '/views/transfer-tokens.html',
+    scope: false,
+    link: function(scope, elem, attrs){
+
+      scope.getTransferTokens = function(last,order) {
+        var data = {"action": "transferTokens"};
+        data.last_id = last;
+        data.order = order;
+        data.address = scope.addrHash;
+
+        $http({
+          method: 'POST',
+          url: '/tokenrelay',
+          data: data
+        }).success(function(data) {
+          scope.transfer_tokens = data.transList;
+          scope.token_decimal = Math.pow(10,data.decimals)
+        });
+      }
+      scope.getTransferTokens(-1,0)
+   }
+  }
+})

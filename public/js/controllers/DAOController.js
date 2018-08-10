@@ -71,6 +71,7 @@ angular.module('BlocksApp').controller('DAOController', function($stateParams, $
 
   }
 })
+/*
 .directive('transferTokens', function($http) {
   return {
     restrict: 'E',
@@ -82,7 +83,6 @@ angular.module('BlocksApp').controller('DAOController', function($stateParams, $
         var data = {"action": "transferTokens"};
         if (last)
           data.last_id = last;
-
         $http({
           method: 'POST',
           url: '/daorelay',
@@ -91,9 +91,9 @@ angular.module('BlocksApp').controller('DAOController', function($stateParams, $
           scope.transfer_tokens = data;
         });
       }
-
       scope.getTransferTokens();
     }
 
   }
 })
+*/

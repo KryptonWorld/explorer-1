@@ -8,10 +8,15 @@ var eth = require('./web3relay').eth;
 
 var BigNumber = require('bignumber.js');
 var etherUnits = require(__lib + "etherUnits.js")
+var DB = require("../db.js")
+var TokenBalance = DB.TokenBalance
+var TokenTransaction = DB.TokenTransaction
+var Tokens = require("../public/tokens.json")
 
 const ABI = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"}];
 
 const Contract = eth.contract(ABI);
+
 
 
 module.exports = function(req, res){
@@ -29,20 +34,30 @@ module.exports = function(req, res){
       actualBalance = etherUnits.toEther(actualBalance, 'wei');
       var totalSupply = Token.totalSupply();
       // totalSupply = etherUnits.toEther(totalSupply, 'wei')*100;
-      var decimals = Token.decimals();
-      var name = Token.name();
-      var symbol = Token.symbol();
-      var count = eth.getTransactionCount(contractAddress);
-      var tokenData = {
-        "balance": actualBalance,
-        "total_supply": totalSupply,
-        "count": count,
-        "name": name,
-        "symbol": symbol,
-        "bytecode": eth.getCode(contractAddress)
-      }
-      res.write(JSON.stringify(tokenData));
-      res.end();
+      var decimals =  Tokens[contractAddress].decimal
+      var name = Tokens[contractAddress].name
+      var symbol = Tokens[contractAddress].symbol
+
+      console.log("decimals is ",decimals , " totalSupply is ",totalSupply,totalSupply.valueOf()/Math.pow(10,parseInt(decimals)) )
+      TokenBalance.find({"value":{$gt:0}}).count( (err,holdcnt)=>{
+        TokenTransaction.find().count( (err,trxscnt )=>{
+          TokenBalance.find().sort("-value").limit(100).exec( (err,balances ) =>{
+            var tokenData = {
+              "balance": actualBalance,
+              "total_supply": totalSupply.valueOf()/Math.pow(10,parseInt(decimals)),
+              "total_decimal" : Math.pow(10,parseInt(decimals)),
+              "total_holders":holdcnt,
+              "count": trxscnt,
+              "name": name,
+              "symbol": symbol,
+              "bytecode": eth.getCode(contractAddress),
+              "token_balances" : balances,
+            }
+            res.write(JSON.stringify(tokenData));
+            res.end();
+          })
+        })
+      })
     } catch (e) {
       console.error(e);
     }
@@ -50,14 +65,26 @@ module.exports = function(req, res){
     var addr = req.body.user.toLowerCase();
     try {
       var tokens = Token.balanceOf(addr);
+      var decimals = Token.decimals();
       // tokens = etherUnits.toEther(tokens, 'wei')*100;
-      res.write(JSON.stringify({"tokens": tokens}));
+      res.write(JSON.stringify({"tokens": tokens/Math.pow(10,parseInt(decimals)) }));
       res.end();
     } catch (e) {
       console.error(e);
     }
-  } 
-  
+  } else if ( req.body.action == "transferTokens" ){ 
+    let filter = {}
+    let order = (parseInt( req.body.order ) )
+    if ( order == 1 ){
+      filter ={"blockNumber":{$gte : parseInt(req.body.last_id)}}
+    }else if (order == -1){
+      filter ={"blockNumber":{$lte : parseInt(req.body.last_id)}}
+    }
+    TokenTransaction.find(filter).sort("-_id").exec( (err,trans)=>{
+      res.write( JSON.stringify( {transList: trans,decimals : Tokens[contractAddress].decimal } ) )
+      res.end();
+    })
+  }
 };  
 
 const MAX_ENTRIES = 50;

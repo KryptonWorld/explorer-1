@@ -179,7 +179,7 @@ var sendTxs = function(lim, res) {
         });
 }
 var getInternalTrans = function(req, res) {
-  InternalTransaction.find({"contractAddr" : req.body.addrHash},(err,data)=>{
+  InternalTransaction.find({"contractAddr" : req.body.addrHash}).sort("-_id").limit(100).exec((err,data)=>{
    res.write(JSON.stringify({"res": data}));
    res.end();
   })

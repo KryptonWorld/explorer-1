@@ -8,13 +8,16 @@
                 <span class="eth-stat-title">
                   {{ token.balance | number: 10 }} </span><br>
                 <span class="eth-stat-text">
-                  {{ token.name }} Address Balance (ETC)
-                  </span><br> 
+                  {{ token.name }} Address Balance
+                  </span><br>
+
                   <div class="margin-top-20">
                   {{ token.total_supply | number:1 }} <span class="eth-stat-text">Total {{ token.symbol }} Tokens</span>
                   </div>
-                  {{ token.total_holders | number:1 }} <div class="margin-top-20">
-                   <span class="eth-stat-text">Token Holders</span>
+
+
+                  <div class="margin-top-20">
+                  {{ token.total_holders | number:1 }} <span class="eth-stat-text">Token Holders</span>
                   </div>
                   <div class="margin-top-20">
                   {{ token.count }} <span class="eth-stat-text">Transactions</span>
@@ -26,15 +29,17 @@
                 <div class="portlet">
                   <div class="portlet-body">
 
+                    <!--
                     <span class='btn blue-madison' ng-show="!isFollowing(token.ash)" ng-click="follow(token.ash)">WATCH <i class="fa fa-rss "></i></span>
                     <span class='btn grey'  ng-show="isFollowing(token.ash)" ng-click="unFollow(token.ash)">WATCHING <i class="fa fa-check "></i></span>
                     <div class="margin-top-20">
-                        {{ token.follow_count }}0 
+                        {{ token.follow_count }}0
                         <span class="eth-stat-text">WATCHING</span>
                     </div>
+                    -->
                     <div class="margin-top-20">
                        <span class="eth-stat-text">Contract Creator</span><br>
-                       <a href="/addr/{{token.creator}}">{{token.creator.substr(0,24)}}...</a> at txn 
+                       <a href="/addr/{{token.creator}}">{{token.creator.substr(0,24)}}...</a> at txn
                        <a href="/tx/{{token.transaction}}">{{token.transaction.substr(0,24)}}...</a>
                     </div>
                     <div class="margin-top-20">
@@ -53,7 +58,7 @@
   <!-- Begin: Transaction Datatable -->
   <div class="portlet light col-md-12">
      <div class="portlet-body">
-       
+
        <div class="tabbable-line">
           <ul class="nav nav-tabs ">
               <li ng-class="{active: activeTab == 'tab_token_1' || !activeTab}">
@@ -64,13 +69,39 @@
               </li>
               <li ng-class="{active: activeTab == 'tab_token_3'}">
                   <a href="#tab_token_3" data-toggle="tab" aria-expanded="true"> Contract Transactions </a>
-              </li>              
+              </li>
               <li ng-class="{active: activeTab == 'tab_token_4'}">
                   <a href="#tab_token_4" data-toggle="tab" aria-expanded="false"> Contract Source </a>
-              </li>              
+              </li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane" ng-class="{active: activeTab == 'tab_token_1' || !activeTab}" id="tab_token_1">
+
+
+                <h3> Top 100 {{token.name }} <span ng-show="!token.name">Token</span> Holders</h4>
+                <div class="tab-pane table-container" ng-class="{active: activeTab == 'tab_token_3'}" id="tab_token_3"><!-- Datatable tab -->
+                  <table class="table table-striped table-hover" id="table_txs" style="table-layout:fixed;width: 98% !important;">
+                      <thead>
+                          <tr role="row" class="heading">
+                              <th width="15%"> rank </th>
+                              <th width="35%"> address </th>
+                              <th width="20%"> value </th>
+                              <th width="20%"> ratio </th>
+                          </tr>
+                      </thead>
+                      <tbody>
+
+                        <tr ng-repeat="t in token.token_balances track by $index">
+                          <td> {{$index+1}} </td>
+                          <td style="text-align:left"> <a href="addr/{{t.addr}}" > {{t.addr}}</a> </td>
+                            <td style="text-align:left"> {{t.value/token.total_decimal | number}} </td>
+                            <td style="text-align:left"> {{t.value/token.total_supply/token.total_decimal | number}} </td>
+                        </tr>
+
+                      </tbody>
+                  </table>
+                </div><!-- End: Datatable tab -->
+
                 <h4>Get {{ token.name }}  <span ng-show="!token.name">Token</span> Balance</h4>
                 <div class="row"><!-- get my balance -->
                   <form class="col-md-10 center" name="form.tokens">
@@ -89,6 +120,9 @@
                     <h4>You have <span class="eth-stat-title font-blue-madison">0{{userTokens | number}}</span> {{ token.symbol }}  tokens.</h4>
                   </div>
                 </div>
+
+
+
             </div><!-- end get Token Balance Tab -->
             <div class="tab-pane" id="tab_token_2" ng-class="{active: activeTab == 'tab_token_2'}">
               <transfer-tokens></transfer-tokens>
@@ -113,7 +147,7 @@
 
             <div class="tab-pane" id="tab_token_4" ng-class="{active: activeTab == 'tab_token_4'}">
               <contract-source></contract-source>
-            </div>            
+            </div>
         </div><!-- end tab content -->
       </div>
     </div><!-- End: portlet -->
