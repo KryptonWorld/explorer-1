@@ -32,7 +32,7 @@ module.exports = function(req, res){
     try {
       var actualBalance = eth.getBalance(contractAddress);
       actualBalance = etherUnits.toEther(actualBalance, 'wei');
-      var totalSupply = Token.totalSupply();
+      var totalSupply = Tokens[contractAddress].totalSupply
       // totalSupply = etherUnits.toEther(totalSupply, 'wei')*100;
       var decimals =  Tokens[contractAddress].decimal
       var name = Tokens[contractAddress].name
@@ -44,7 +44,7 @@ module.exports = function(req, res){
           TokenBalance.find().sort("-value").limit(100).exec( (err,balances ) =>{
             var tokenData = {
               "balance": actualBalance,
-              "total_supply": totalSupply.valueOf()/Math.pow(10,parseInt(decimals)),
+              "total_supply": totalSupply.valueOf(),
               "total_decimal" : Math.pow(10,parseInt(decimals)),
               "total_holders":holdcnt,
               "count": trxscnt,
@@ -65,7 +65,8 @@ module.exports = function(req, res){
     var addr = req.body.user.toLowerCase();
     try {
       var tokens = Token.balanceOf(addr);
-      var decimals = Token.decimals();
+      var decimals = Tokens[contractAddress].decimal
+    //  console.log("@@Tokens is ",tokens , " decimal is ",decimals," addr is ",addr ," Contract is ",contractAddress)
       // tokens = etherUnits.toEther(tokens, 'wei')*100;
       res.write(JSON.stringify({"tokens": tokens/Math.pow(10,parseInt(decimals)) }));
       res.end();
@@ -80,7 +81,7 @@ module.exports = function(req, res){
     }else if (order == -1){
       filter ={"blockNumber":{$lte : parseInt(req.body.last_id)}}
     }
-    TokenTransaction.find(filter).sort("-_id").exec( (err,trans)=>{
+    TokenTransaction.find(filter).sort("-_id").limit(50).exec( (err,trans)=>{
       res.write( JSON.stringify( {transList: trans,decimals : Tokens[contractAddress].decimal } ) )
       res.end();
     })

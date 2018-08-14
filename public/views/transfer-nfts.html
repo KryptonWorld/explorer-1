@@ -1,0 +1,37 @@
+
+<div class="table-scrollable">
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th style="text-align:right"> NftId </th>
+                <th> Img </th>
+                <th> TxHash </th>
+                <th> Age </th>
+                <th> Block </th>
+                <th> From </th>
+                <th> To </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="t in transfer_nfts track by $index">
+                <td style="text-align:right"> <a target="_blank" href="http://keth.mitao.io/Details/{{t.nftType}}/{{t.nftId}}"> {{t.nftId | number}}  </a></td>
+                <td>  <a target="_blank" href="http://keth.mitao.io/Details/{{t.nftType}}/{{t.nftId}}"><img width="64" height="64" src="{{ infoMaps[t.nftId] }}" /></a></td>
+                <td class="truncate-txhash"> <a href="/tx/{{t.transHash}}">{{t.transHash}}</a> </td>
+                <td>{{t.createdAt | timeDuration}} ago</td>
+                <td> <a href="/block/{{t.blockNumber}}">{{t.blockNumber}}</a> </td>
+                <td class="truncate-addrhash"> <a href="/addr/{{t.from}}">{{t.from}}</a> </td>
+                <td class="truncate-addrhash"> <a href="/addr/{{t.to}}">{{t.to}}</a> </td>
+                <td style="text-align:center"><span class="label label-sm label-info"> Transfer </span></td>
+            </tr>
+        </tbody>
+    </table>
+    <ul class="pager">
+        <li class="previous">
+            <a ng-click="getTransferNfts(transfer_nfts[0].blockNumber,1)"> ← Newer </a>
+        </li>
+        <li class="next">
+            <a ng-click="getTransferNfts(transfer_nfts[transfer_nfts.length-1].blockNumber,-1)"> Older → </a>
+        </li>
+    </ul>
+</div>

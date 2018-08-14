@@ -1,6 +1,8 @@
 var mongoose = require( 'mongoose' );
 var Schema   = mongoose.Schema;
-var Conf = require("./config").Conf
+var {Conf,NftDbConn} = require("./config")
+var nftMongoose = NftDbConn
+
 
 var Block = new Schema(
 {
@@ -73,6 +75,40 @@ var TokenTransaction = new Schema({
 })
 
 
+var NftTopics = new Schema({
+  nftType:String,
+  nftId : Number,
+  blockNumber : Number,
+  transHash : String,
+  transIndex :Number,
+  event :  String, //Transfer
+  price: Number,
+  from : String,
+  to : String,
+  createdAt : Number
+});
+
+
+
+var NftOwnership = new Schema({
+  nftType:String,
+  nftId: Number,
+  owner : String,
+  blockNumber :Number
+});
+
+
+var NftInfo = new Schema({
+  nftType:String,
+  nftId : Number,
+  tags : [],
+  image_url :String,
+  desc : String,
+  name : String,
+  properties : mongoose.Schema.Types.Mixed,
+  createdAt : Number
+});
+
 
 mongoose.model('eth_blocks', Block);
 mongoose.model('eth_contracts', Contract);
@@ -80,11 +116,25 @@ mongoose.model('eth_transaction', Transaction);
 mongoose.model('token_balances', TokenBalance);
 mongoose.model('token_transactions', TokenTransaction);
 
+nftMongoose.model("nft_topics",NftTopics)
+nftMongoose.model("nft_ownerships",NftOwnership)
+nftMongoose.model("nft_iteminfos",NftInfo)
+
+
 module.exports.Block = mongoose.model('eth_blocks');
 module.exports.Contract = mongoose.model('eth_contracts');
 module.exports.Transaction = mongoose.model('eth_transaction');
 module.exports.TokenBalance = mongoose.model('token_balances');
 module.exports.TokenTransaction = mongoose.model('token_transactions');
 
+module.exports.NftTopics = nftMongoose.model('nft_topics');
+module.exports.NftOwnership = nftMongoose.model('nft_ownerships');
+module.exports.NftInfo = nftMongoose.model('nft_iteminfos');
+
+
 mongoose.connect(process.env.MONGO_URI || Conf.MongoUrl);
+//nftMongoose.connect( Conf.NftMongoUrl);
+
+
 mongoose.set('debug', true);
+//nftMongoose.set('debug', true);

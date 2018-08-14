@@ -261,6 +261,24 @@ BlocksApp.config(['$stateProvider', '$urlRouterProvider', function($stateProvide
             }
         })
 
+        .state('nft', {
+            url: "/nft/{hash}",
+            templateUrl: "views/nft.html",
+            data: {pageTitle: 'Nft'},
+            controller: "NftController",
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'BlocksApp',
+                        insertBefore: '#ng_load_plugins_before', 
+                        files: [
+                             '/js/controllers/NftController.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
         .state('dao', {
             url: "/dao",
             templateUrl: "views/dao.html",

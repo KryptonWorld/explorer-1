@@ -53,10 +53,6 @@ var compileSolc = function(req, res) {
         var output = solc.compile(input, optimise);
         testValidCode(output, data, bytecode, res);
     } else {
-
-       var output = solc.compile(input, optimise); 
-       testValidCode(output, data, bytecode, res);
-
       solc.loadRemoteVersion(version, function(err, solcV) {  
         if (err) {
           console.error(err);
