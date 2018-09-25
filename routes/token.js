@@ -23,8 +23,8 @@ module.exports = function(req, res){
   console.log(req.body)
 
   var contractAddress = req.body.address;
-
   var Token = Contract.at(contractAddress);
+  let contractName = Tokens[contractAddress].contractName
 
   if (!("action" in req.body))
     res.status(400).send();
@@ -39,9 +39,9 @@ module.exports = function(req, res){
       var symbol = Tokens[contractAddress].symbol
 
       console.log("decimals is ",decimals , " totalSupply is ",totalSupply,totalSupply.valueOf()/Math.pow(10,parseInt(decimals)) )
-      TokenBalance.find({"value":{$gt:0}}).count( (err,holdcnt)=>{
-        TokenTransaction.find().count( (err,trxscnt )=>{
-          TokenBalance.find().sort("-value").limit(100).exec( (err,balances ) =>{
+      TokenBalance.find({"value":{$gt:0},"tokenType": contractName}).count( (err,holdcnt)=>{
+        TokenTransaction.find( {"tokenType": contractName} ).count( (err,trxscnt )=>{
+          TokenBalance.find({"tokenType": contractName}).sort("-value").limit(100).exec( (err,balances ) =>{
             var tokenData = {
               "balance": actualBalance,
               "total_supply": totalSupply.valueOf(),
@@ -74,12 +74,12 @@ module.exports = function(req, res){
       console.error(e);
     }
   } else if ( req.body.action == "transferTokens" ){ 
-    let filter = {}
+    let filter = { contractType:contractName  }
     let order = (parseInt( req.body.order ) )
     if ( order == 1 ){
-      filter ={"blockNumber":{$gte : parseInt(req.body.last_id)}}
+      filter ={"blockNumber":{$gte : parseInt(req.body.last_id)},contractType:contractName }
     }else if (order == -1){
-      filter ={"blockNumber":{$lte : parseInt(req.body.last_id)}}
+      filter ={"blockNumber":{$lte : parseInt(req.body.last_id)},contractType:contractName }
     }
     TokenTransaction.find(filter).sort("-_id").limit(50).exec( (err,trans)=>{
       res.write( JSON.stringify( {transList: trans,decimals : Tokens[contractAddress].decimal } ) )

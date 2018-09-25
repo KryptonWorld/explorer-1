@@ -38,12 +38,12 @@ module.exports = function(req, res){
       var name = Nfts[contractAddress].name
       var symbol = Nfts[contractAddress].symbol
       NftTopics.find({"nftType": Nfts[contractAddress].contractName,"event":"Transfer" }).count( (err,trxscnt)=>{
-       NftOwnership.find({"nftType":Nfts[contractAddress].contractName }).distinct("owner").count( (err,holders )=>{
+       NftOwnership.find({"nftType":Nfts[contractAddress].contractName }).distinct("owner", (err,holders )=>{
           NftOwnership.aggregate([ {$match:{"nftType":Nfts[contractAddress].contractName } } ,{$group:{_id:"$owner",total:{$sum:1}}} ,{$sort:{ total:-1 } },{ $limit : 100 } ],(err,result)=>{
             var tokenData = {
               "balance" : actualBalance,
               "total_supply": totalSupply.valueOf(),
-              "total_holders":holders,
+              "total_holders":holders.length,
               "count": trxscnt,
               "name": name,
               "symbol": symbol,

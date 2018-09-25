@@ -10,6 +10,7 @@
                 <th> Block </th>
                 <th> From </th>
                 <th> To </th>
+                <th> Price </th>
                 <th></th>
             </tr>
         </thead>
@@ -22,7 +23,14 @@
                 <td> <a href="/block/{{t.blockNumber}}">{{t.blockNumber}}</a> </td>
                 <td class="truncate-addrhash"> <a href="/addr/{{t.from}}">{{t.from}}</a> </td>
                 <td class="truncate-addrhash"> <a href="/addr/{{t.to}}">{{t.to}}</a> </td>
-                <td style="text-align:center"><span class="label label-sm label-info"> Transfer </span></td>
+                <td> {{ (t.price/1e18).toFixed(3) }} </td>
+                <td style="text-align:center">
+                  <span class="label label-sm label-info">
+                    {{
+                      (t.from == "0x0000000000000000000000000000000000000000")? "Brith" :  "Transfer"
+                     }}
+                  </span>
+                </td>
             </tr>
         </tbody>
     </table>
