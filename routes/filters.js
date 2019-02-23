@@ -93,6 +93,7 @@ module.exports = {
   filterBlock: filterBlock,
   filterBlocks: filterBlocks,
   filterTX: filterTX,
+  filterInternalTX: filterInternalTX,
   filterTrace: filterTrace,
   datatableTX: datatableTX,
   internalTX: internalTX
