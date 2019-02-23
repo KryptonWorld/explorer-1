@@ -58,7 +58,18 @@ var getAddr = function(req, res){
 
   var addrFind = Transaction.find( { $or: [{"to": addr}, {"from": addr}] })  
 
-  addrFind.lean(true).sort('-blockNumber').skip(start).limit(limit)
+  var orderColumnMap = { "1" : "blockNumber" , "4" :"value"  } 
+
+  var dir = "-"
+  if (req.body.order[0]["dir"] == "asc"){
+    dir = ""
+  }
+  var orderCol =  orderColumnMap[req.body.order[0]["column"]] || "blockNumber"
+  var sortStr = dir +  orderCol
+  console.log("sortStr is ",sortStr, " orderCol is ",orderCol)
+
+
+  addrFind.lean(true).sort(sortStr).skip(start).limit(limit)
           .exec("find", function (err, docs) {
             if (docs)
               data.data = filters.filterTX(docs, addr);      
@@ -179,10 +190,36 @@ var sendTxs = function(lim, res) {
         });
 }
 var getInternalTrans = function(req, res) {
-  InternalTransaction.find({"contractAddr" : req.body.addrHash}).sort("-_id").limit(100).exec((err,data)=>{
-   res.write(JSON.stringify({"res": data}));
-   res.end();
-  })
+  var addr = req.body.addr.toLowerCase();
+  var count = parseInt(req.body.count);
+
+  var limit = parseInt(req.body.length);
+  var start = parseInt(req.body.start);
+
+  var data = { draw: parseInt(req.body.draw), recordsFiltered: count, recordsTotal: count };
+
+  var addrFind = InternalTransaction.find( { $or: [{"to": addr}, {"from": addr}] })  
+
+  var orderColumnMap = { "1" : "blockNumber" , "4" :"value"  } 
+
+  var dir = "-"
+  if (req.body.order[0]["dir"] == "asc"){
+    dir = ""
+  }
+  var orderCol =  orderColumnMap[req.body.order[0]["column"]] || "blockNumber"
+  var sortStr = dir +  orderCol
+  console.log("sortStr is ",sortStr, " orderCol is ",orderCol)
+
+
+  addrFind.lean(true).sort(sortStr).skip(start).limit(limit)
+          .exec("find", function (err, docs) {
+            if (docs)
+              data.data = filters.filterTX(docs, addr);      
+            else 
+              data.data = [];
+            res.write(JSON.stringify(data));
+            res.end();
+          });
 
 }
 const MAX_ENTRIES = 10;

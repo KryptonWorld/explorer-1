@@ -19,11 +19,12 @@ angular.module('BlocksApp').controller('AddressController', function($stateParam
       data: {"addr": $scope.addrHash, "options": ["balance", "count", "bytecode"]}
     }).success(function(data) {
       $scope.addr = data;
-      fetchTxs($scope.addr.count);
+      fetchTxs($scope.addr.count,"#table_txs",'/addr');
       if (data.isContract) {
         $rootScope.$state.current.data["pageTitle"] = "Contract Address";
-        fetchInternalTxs();
       }
+      fetchTxs($scope.addr.count,'#table_intxs','/internal_trans');
+      fetchInternalTxs($scope.addr.count);
     });
 
     // fetch ethf balance 
@@ -36,13 +37,13 @@ angular.module('BlocksApp').controller('AddressController', function($stateParam
     });
 
     //fetch transactions
-    var fetchTxs = function(count) {
-      $("#table_txs").DataTable({
+    var fetchTxs = function(count,id,url) {
+      $(id).DataTable({
         processing: true,
         serverSide: true,
         paging: true,
         ajax: {
-          url: '/addr',
+          url: url,
           type: 'POST',
           data: { "addr": $scope.addrHash, "count": count }
         },
@@ -81,16 +82,6 @@ angular.module('BlocksApp').controller('AddressController', function($stateParam
                       }, "targets": [6]},
           ]
       });
-    }
-
-    var fetchInternalTxs = function() {
-      $http({
-        method: 'POST',
-        url: '/internal_trans',
-        data: {"addrHash": $scope.addrHash}
-      }).success(function(data) {
-        $scope.internal_transactions = data.res;
-      });      
     }
     
 })
