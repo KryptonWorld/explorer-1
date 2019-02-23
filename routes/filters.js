@@ -9,6 +9,11 @@ function filterTX(txs, value) {
     return [tx.hash, tx.blockNumber, tx.from, tx.to, etherUnits.toEther(tx.value, 'wei'), tx.gas, tx.createdAt]
   })
 }
+function filterInternalTX(txs, value) {
+  return txs.map(function(tx){
+    return [tx.transHash, tx.blockNumber, tx.from, tx.to, etherUnits.toEther(tx.value, 'wei'), tx.gas, tx.createdAt]
+  })
+}
 
 function filterTrace(txs, value) {
   return txs.map(function(tx){

@@ -4,6 +4,7 @@ var Schema   = mongoose.Schema;
 var InternalTransaction = new Schema(
 {
     "transHash":String,
+    "blockNumber": Number,
     "transIndex":Number,
     "from": String,  // for call
     "to": String,

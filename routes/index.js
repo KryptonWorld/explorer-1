@@ -214,7 +214,7 @@ var getInternalTrans = function(req, res) {
   addrFind.lean(true).sort(sortStr).skip(start).limit(limit)
           .exec("find", function (err, docs) {
             if (docs)
-              data.data = filters.filterTX(docs, addr);      
+              data.data = filters.filterInternalTX(docs, addr);      
             else 
               data.data = [];
             res.write(JSON.stringify(data));
