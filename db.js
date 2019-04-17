@@ -8,22 +8,14 @@ var Block = new Schema(
 {
     "number": {type: Number, index: {unique: true}},
     "hash": String,
+    "numTxns": Number,
     "parentHash": String,
-    "nonce": String,
-    "sha3Uncles": String,
-    "logsBloom": String,
-    "transactionsRoot": String,
     "stateRoot": String,
-    "receiptRoot": String,
     "miner": String,
-    "difficulty": String,
-    "totalDifficulty": String,
-    "size": Number,
-    "extraData": String,
     "gasLimit": Number,
     "gasUsed": Number,
     "timestamp": Number,
-    "uncles": [String]
+    "extraData":  mongoose.Schema.Types.Mixed,
 });
 
 var Contract = new Schema(
@@ -54,6 +46,13 @@ var Transaction = new Schema(
     "input": String
 });
 
+var ReceiptLog = new Schema({
+  hash : String,
+  address :String,
+  topics : String,
+  blockNumber : Number,
+  data: mongoose.Schema.Types.Mixed,
+});
 
 var TokenBalance = new Schema({
   "addr" :String,
@@ -110,9 +109,6 @@ var NftInfo = new Schema({
 });
 
 
-mongoose.model('eth_blocks', Block);
-mongoose.model('eth_contracts', Contract);
-mongoose.model('eth_transaction', Transaction);
 mongoose.model('token_balances', TokenBalance);
 mongoose.model('token_transactions', TokenTransaction);
 
@@ -121,9 +117,11 @@ nftMongoose.model("nft_ownerships",NftOwnership)
 nftMongoose.model("nft_iteminfos",NftInfo)
 
 
-module.exports.Block = mongoose.model('eth_blocks');
-module.exports.Contract = mongoose.model('eth_contracts');
-module.exports.Transaction = mongoose.model('eth_transaction');
+module.exports.Block = mongoose.model('zil_blocks',Block);
+module.exports.Contract = mongoose.model('zil_contracts',Contract);
+module.exports.Transaction = mongoose.model('zil_transaction',Transaction);
+module.exports.ReceiptLog = mongoose.model('zil_receipt_logs',ReceiptLog);
+
 module.exports.TokenBalance = mongoose.model('token_balances');
 module.exports.TokenTransaction = mongoose.model('token_transactions');
 
@@ -132,6 +130,7 @@ module.exports.NftOwnership = nftMongoose.model('nft_ownerships');
 module.exports.NftInfo = nftMongoose.model('nft_iteminfos');
 
 
+console.log("@@@Conf ",Conf.MongoUrl)
 mongoose.connect(process.env.MONGO_URI || Conf.MongoUrl);
 //nftMongoose.connect( Conf.NftMongoUrl);
 

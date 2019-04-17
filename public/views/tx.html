@@ -10,7 +10,7 @@
                 <td><a href="/block/{{tx.blockNumber}}">{{tx.blockNumber}}</a></td>
           </tr>
           <tr ><td width="25%">Time</td>
-                <td>{{tx.datetime | date:'yyyy-MM-dd HH:mm:ss Z' }} ({{tx.timestamp | timeDuration}} ago)</td>
+                <td>{{tx.timestamp | date:'yyyy-MM-dd HH:mm:ss Z' }} ({{tx.timestamp/1e3 | timeDuration}} ago)</td>
           </tr>
           <tr ><td width="25%">from</td>
                 <td><a href="/addr/{{tx.from}}">{{tx.from}}</a></td></tr>
@@ -18,11 +18,22 @@
                 <td><a href="/addr/{{tx.to}}">{{tx.to}}</a></td></tr>
           <tr ng-show="tx.creates"><td width="25%">creates</td>
                 <td><a href="/addr/{{tx.creates}}">{{tx.creates}}</a></td></tr>
-          <tr ><td width="25%">value</td><td>{{tx.value}} Keth</td></tr>
-          <tr ><td width="25%">gas Provided</td><td>{{tx.gas}}</td></tr>
+          <tr ><td width="25%">value</td><td>{{tx.value/1e12}} Zil</td></tr>
+          <tr ><td width="25%">gas Limit</td><td>{{tx.gasLimit}}</td></tr>
           <tr ><td width="25%">gasPrice</td><td>{{tx.gasPrice}}</td></tr>
           <tr ><td width="25%">nonce</td><td>{{tx.nonce}}</td></tr>
-          <tr ><td width="25%">Input Data</td><td><pre class="code">{{tx.input}}</pre></td></tr>
+          <tr ><td width="25%">status</td><td>{{tx.status}}</td></tr>
+
+          <tr ng-show="tx.contractAddr" ><td width="25%">Contract Addr</td><td><a href="/addr/{{tx.contractAddr}}"> {{tx.contractAddr}}</a></td></tr>
+
+          <tr ><td width="25%">events </td><td><pre class="code">
+          {{tx.events}}
+          <!--
+              <ul ng-repeat="e in tx.events">
+                <li> {{e}} </li>
+              </ul>
+              -->
+          </pre></td></tr>
         </table>
 
         <table class="table table-condensed" ng-show="tx.isTrace">

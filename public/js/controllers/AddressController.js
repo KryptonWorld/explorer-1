@@ -78,7 +78,7 @@ angular.module('BlocksApp').controller('AddressController', function($stateParam
                         return '<a href="/tx/'+data+'">'+data+'</a>'
                       }, "targets": [0]},
           { "render": function(data, type, row) {
-                        return getDuration(data).toString();
+                        return getDuration(data/1e3).toString();
                       }, "targets": [6]},
           ]
       });

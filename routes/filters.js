@@ -6,7 +6,7 @@ var BigNumber = require('bignumber.js');
 */
 function filterTX(txs, value) {
   return txs.map(function(tx){
-    return [tx.hash, tx.blockNumber, tx.from, tx.to, etherUnits.toEther(tx.value, 'wei'), tx.gas, tx.createdAt]
+    return [tx.hash, tx.blockNumber, tx.from, tx.to, tx.value/1e12, tx.gas, tx.timestamp]
   })
 }
 function filterInternalTX(txs, value) {
@@ -55,12 +55,10 @@ function filterBlock(block, field, value) {
 function filterBlocks(blocks) {
   if (blocks.constructor !== Array) {
     var b = blocks;
-    b.extraData = hex2ascii(blocks.extraData);
     return b;
   }
   return blocks.map(function(block) {
     var b = block;
-    b.extraData = hex2ascii(block.extraData);
     return b;
   })
 }

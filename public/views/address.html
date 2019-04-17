@@ -10,12 +10,12 @@
             <div class="col-md-6 center">
               <div >
                 <span class="eth-stat-title">
-                  {{ addr.balance | number: 10 }} </span><br>
+                  {{ addr.balance/1e12 | number: 10 }} </span><br>
                 <span class="eth-stat-text">
-                  Keth Balance <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="Note: Balance may not reflect transaction data if you have transactions resulting from Contract Internal Transactions. We are working on adding that functionality."></i>
+                  Zil Balance <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="right" title="Note: Balance may not reflect transaction data if you have transactions resulting from Contract Internal Transactions. We are working on adding that functionality."></i>
                   </span><br>
                   <div class="margin-top-20">
-                  <span class="fade">{{ addr.ethfiat | number: 10 }}</span> <span class="eth-stat-text fade">KETH-F balance
+                  <span class="fade">{{ addr.ethfiat | number: 10 }}</span> <span class="eth-stat-text fade">Zil balance
                   </span> <a href="http://etherscan.io/address/{{addrHash}}" target="_blank"><i class="fa fa-external-link"></i></a>
                   </div>
                   <div class="margin-top-20">
@@ -31,12 +31,15 @@
                 <div class="portlet">
                   <div class="portlet-body">
 
-                    <span class='btn blue-madison' ng-show="!isFollowing(addrHash)" ng-click="follow(addrHash)">WATCH <i class="fa fa-rss "></i></span>
-                    <span class='btn grey'  ng-show="isFollowing(addrHash)" ng-click="unFollow(addrHash)">WATCHING <i class="fa fa-check "></i></span>
-                    <div class="margin-top-20">
-                        {{ addr.follow_count }}0
-                        <span class="eth-stat-text">WATCHING</span>
-                    </div>
+                    <!--
+                      <span class='btn blue-madison' ng-show="!isFollowing(addrHash)" ng-click="follow(addrHash)">WATCH <i class="fa fa-rss "></i></span>
+                      <span class='btn grey'  ng-show="isFollowing(addrHash)" ng-click="unFollow(addrHash)">WATCHING <i class="fa fa-check "></i></span>
+                      <div class="margin-top-20">
+                          {{ addr.follow_count }}0
+                          <span class="eth-stat-text">WATCHING</span>
+                      </div>
+                    -->
+
                 </div>
               </div>
             </div>
@@ -53,9 +56,11 @@
               <li ng-class="{active: activeTab == 'tab_addr_1' || !activeTab}">
                   <a href="#tab_addr_1" data-toggle="tab" aria-expanded="true"> Transactions </a>
               </li>
-              <li  ng-class="{active: activeTab == 'tab_addr_2'}" > <!-- ng-show="addr.isContract"> -->
+              <!--
+              <li  ng-class="{active: activeTab == 'tab_addr_2'}" >
                   <a href="#tab_addr_2" data-toggle="tab" aria-expanded="false"> Internal Transactions </a>
               </li>
+              -->
               <li class="" ng-show="addr.isContract" ng-class="{active: activeTab == 'tab_addr_3'}">
                   <a href="#tab_addr_3" data-toggle="tab" aria-expanded="false"> Contract Source </a>
               </li>
@@ -70,7 +75,7 @@
                           <th width="8%"> Block </th>
                           <th width="15%"> From </th>
                           <th width="15%"> To </th>
-                          <th width="10%"> Keth </th>
+                          <th width="10%"> Zil </th>
                           <th width="0%"> gas </th>
                           <th width="12%"> Age </th>
                       </tr>
@@ -86,7 +91,7 @@
                           <th width="8%"> Block </th>
                           <th width="15%"> From </th>
                           <th width="15%"> To </th>
-                          <th width="10%"> Keth </th>
+                          <th width="10%"> Zil </th>
                           <th width="0%"> gas </th>
                           <th width="12%"> Age </th>
                       </tr>

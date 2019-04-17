@@ -5,6 +5,7 @@
 */
 
 var eth = require('./web3relay').eth;
+/*
 require( '../db-dao' );
 
 var mongoose = require( 'mongoose' );
@@ -95,3 +96,4 @@ module.exports = function(req, res){
 };  
 
 const MAX_ENTRIES = 50;
+*/

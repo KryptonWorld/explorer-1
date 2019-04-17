@@ -1,5 +1,9 @@
+var nftConn = require('mongoose');
 var Conf = {
-  Web3Provider :"http://127.0.0.1:8545",
-  MongoUrl : "mongodb://localhost:27017/mitao-test2",
+  BCProvider :"https://dev-api.zilliqa.com",
+  MongoUrl : "mongodb://127.0.0.1:27017/zil_blockchain",
+  NftMongoUrl : "mongodb://127.0.0.1:27017/zil_nfts",
 }
+
 exports.Conf = Conf;
+exports.NftDbConn = nftConn.createConnection(Conf.NftMongoUrl) ;

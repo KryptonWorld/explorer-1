@@ -35,7 +35,6 @@ module.exports = function(app){
   app.post('/block', getBlock);
   app.post('/data', getData);
 
-  app.post('/daorelay', DAO);
   app.post('/tokenrelay', Token);  
   app.post('/nftrelay', Nft);  
   app.post('/web3relay', web3relay.data);
@@ -165,7 +164,7 @@ var latestBlock = function(req, res) {
 
 
 var getLatest = function(lim, res, callback) {
-  var blockFind = Block.find({}, "number transactions timestamp miner extraData")
+  var blockFind = Block.find({}, "number numTxns timestamp miner extra")
                       .lean(true).sort('-number').limit(lim);
   blockFind.exec(function (err, docs) {
     callback(docs, res);
@@ -174,7 +173,7 @@ var getLatest = function(lim, res, callback) {
 
 /* get blocks from db */
 var sendBlocks = function(lim, res) {
-  var blockFind = Block.find({}, "number transactions timestamp miner extraData")
+  var blockFind = Block.find({}, "number numTxns timestamp miner extra")
                       .lean(true).sort('-number').limit(lim);
   blockFind.exec(function (err, docs) {
     res.write(JSON.stringify({"blocks": filters.filterBlocks(docs)}));
@@ -198,6 +197,12 @@ var getInternalTrans = function(req, res) {
 
   var data = { draw: parseInt(req.body.draw), recordsFiltered: count, recordsTotal: count };
 
+  data.data = []
+  res.write(JSON.stringify(data));
+  res.end()
+
+
+  /*
   var addrFind = InternalTransaction.find( { $or: [{"to": addr}, {"from": addr}] })  
 
   var orderColumnMap = { "1" : "blockNumber" , "4" :"value"  } 
@@ -220,6 +225,7 @@ var getInternalTrans = function(req, res) {
             res.write(JSON.stringify(data));
             res.end();
           });
+          */
 
 }
 const MAX_ENTRIES = 10;
